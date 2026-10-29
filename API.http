@@ -1,0 +1,286 @@
+### ===================================================================
+### InternShield REST API Testing File (VS Code REST Client / Postman)
+### Base URL: http://localhost:5000
+### ===================================================================
+
+@baseUrl = http://localhost:5000/api
+@contentType = application/json
+
+### -------------------------------------------------------------------
+### 1. AUTHENTICATION & SESSION ENDPOINTS
+### -------------------------------------------------------------------
+
+### Register a new student
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "name": "Viva Test Student",
+  "email": "test.student@college.edu",
+  "password": "Password@123",
+  "role": "student",
+  "skills": ["React", "JavaScript", "Node.js", "Git"],
+  "targetRole": "Web Developer"
+}
+
+### Login with student credentials
+# @name loginStudent
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "aarav.sharma@college.edu",
+  "password": "Student@123"
+}
+
+### Login with admin credentials
+# @name loginAdmin
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@internshield.com",
+  "password": "Admin@123"
+}
+
+### Get current logged-in user profile
+GET {{baseUrl}}/auth/me
+
+### Update student profile (skills, education, target role)
+PUT {{baseUrl}}/auth/profile
+Content-Type: {{contentType}}
+
+{
+  "targetRole": "Frontend Developer",
+  "skills": ["React", "JavaScript", "TypeScript", "HTML5", "CSS3", "Tailwind CSS", "Git"],
+  "education": {
+    "institution": "IIIT Bengaluru",
+    "degree": "B.Tech CSE",
+    "graduationYear": 2026
+  }
+}
+
+### Logout current session
+POST {{baseUrl}}/auth/logout
+
+
+### -------------------------------------------------------------------
+### 2. INTERNSHIPS CRUD & FILTERING
+### -------------------------------------------------------------------
+
+### List internships (with search, filter, pagination, and HATEOAS URL building)
+GET {{baseUrl}}/internships?search=React&mode=hybrid&minStipend=20000&verified=true&page=1&limit=5&sort=newest
+
+### Get single internship by ID
+GET {{baseUrl}}/internships/6adc80d95232119805d45125
+
+### Create internship (Requires Admin Session)
+POST {{baseUrl}}/internships
+Content-Type: {{contentType}}
+
+{
+  "title": "Full Stack Cloud Intern",
+  "company": "Amazon Web Services",
+  "description": "Develop automated deployment pipelines using Docker, React, and Node.js.",
+  "requiredSkills": ["Docker", "React", "Node.js", "AWS"],
+  "location": "Hyderabad, India",
+  "stipend": 45000,
+  "mode": "hybrid",
+  "applyLink": "https://amazon.jobs",
+  "recruiterEmail": "aws-campus@amazon.com",
+  "recruiterPhone": "04044556677",
+  "verified": true,
+  "trustScore": 99
+}
+
+### Update internship (Requires Admin Session)
+PUT {{baseUrl}}/internships/6adc80d95232119805d45125
+Content-Type: {{contentType}}
+
+{
+  "stipend": 38000
+}
+
+
+### -------------------------------------------------------------------
+### 3. FAKE INTERNSHIP DETECTOR
+### -------------------------------------------------------------------
+
+### Analyze a scam offer (Demands security fee, gmail recruiter, unrealistic stipend)
+POST {{baseUrl}}/detector/analyze
+Content-Type: {{contentType}}
+
+{
+  "text": "Work from home 2 hours daily! Earn up to Rs 65,000 per month without any prior coding experience. Pay refundable security deposit of Rs 1,499. Apply within 24 hours, limited seats remaining. Contact WhatsApp only at 9876543210 immediately.",
+  "company": "Apex Global Solutions Ltd",
+  "recruiterEmail": "hr.careers123@gmail.com",
+  "recruiterPhone": "9876543210",
+  "link": "https://bit.ly/apex-scam-intern",
+  "stipend": 65000
+}
+
+### Analyze a legitimate corporate internship offer
+POST {{baseUrl}}/detector/analyze
+Content-Type: {{contentType}}
+
+{
+  "text": "Join our merchant checkout team to build responsive, accessible web interfaces in React and TypeScript. Collaborate with senior designers and backend engineers.",
+  "company": "Razorpay Software",
+  "recruiterEmail": "campus-hiring@razorpay.com",
+  "recruiterPhone": "08046669999",
+  "link": "https://razorpay.com/jobs/frontend-intern",
+  "stipend": 35000
+}
+
+
+### -------------------------------------------------------------------
+### 4. RESUME BUILDER & ATS TAILOR
+### -------------------------------------------------------------------
+
+### Analyze Resume against Job Description for ATS compatibility
+POST {{baseUrl}}/resume/analyze
+Content-Type: {{contentType}}
+
+{
+  "jobDescription": "Looking for React Frontend Developer Intern with hands-on skills in React, JavaScript, HTML5, CSS3, REST API, Git, and Docker. Experience with Node.js is a plus.",
+  "resumeData": {
+    "summary": "Computer science student building full stack web applications in React and Node.js.",
+    "skills": ["React", "JavaScript", "HTML", "CSS", "Git", "Python"],
+    "projects": [
+      {
+        "title": "InternShield Web Portal",
+        "technologies": "React, CSS, Node.js",
+        "description": "Built scam detection tools and verified job matching."
+      }
+    ],
+    "experience": [],
+    "education": [
+      { "institution": "Tech University", "degree": "B.Tech CSE" }
+    ]
+  }
+}
+
+### Tailor Resume to Job Description (Reorders skills & projects by match)
+POST {{baseUrl}}/resume/tailor
+Content-Type: {{contentType}}
+
+{
+  "jobDescription": "We need a Node.js, Express, Docker, and REST API engineer.",
+  "resumeData": {
+    "skills": ["HTML", "CSS", "Docker", "Node.js", "Express.js", "Photoshop"],
+    "projects": [
+      { "title": "Design Portfolio", "technologies": "Photoshop, HTML", "description": "Graphics design." },
+      { "title": "Microservices API", "technologies": "Node.js, Docker, Express", "description": "High performance backend." }
+    ]
+  }
+}
+
+
+### -------------------------------------------------------------------
+### 5. RECOMMENDATIONS & MATCH ENGINE
+### -------------------------------------------------------------------
+
+### Get verified recommendations matched against logged-in student's skills
+GET {{baseUrl}}/recommend
+
+
+### -------------------------------------------------------------------
+### 6. RECRUITER FRAUD CHECK & REPORTING
+### -------------------------------------------------------------------
+
+### Check recruiter email against approved fraud reports
+GET {{baseUrl}}/reports/check?type=email&value=hr.careers123@gmail.com
+
+### Check recruiter phone against approved fraud reports
+GET {{baseUrl}}/reports/check?type=phone&value=9876543210
+
+### Submit a new fraud report (Requires Student Session)
+POST {{baseUrl}}/reports
+Content-Type: {{contentType}}
+
+{
+  "type": "email",
+  "value": "recruiter.fakejobs@gmail.com",
+  "reason": "Demanded ₹2,000 document verification fee via Google Pay."
+}
+
+### Get user's submitted reports
+GET {{baseUrl}}/reports/mine
+
+
+### -------------------------------------------------------------------
+### 7. SKILL GAP ANALYZER & COURSES
+### -------------------------------------------------------------------
+
+### Analyze skill gap for Web Developer role
+GET {{baseUrl}}/skillgap?role=Web%20Developer
+
+### Analyze skill gap for DevOps Engineer role
+GET {{baseUrl}}/skillgap?role=DevOps%20Engineer
+
+
+### -------------------------------------------------------------------
+### 8. AUTOMATED ALERTS
+### -------------------------------------------------------------------
+
+### Get alerts for logged-in user
+GET {{baseUrl}}/alerts
+
+### Get only unread alerts
+GET {{baseUrl}}/alerts?unread=true
+
+### Mark all alerts as read
+PATCH {{baseUrl}}/alerts/read-all
+
+
+### -------------------------------------------------------------------
+### 9. SYLLABUS LAB EXPERIMENTS DEMO ENDPOINTS (Exp 1-3, 6, 11)
+### -------------------------------------------------------------------
+
+### Exp 1a: Defining & Handling routes
+GET {{baseUrl}}/demo/hello
+
+### Exp 3a: Route parameters (req.params)
+GET {{baseUrl}}/demo/users/42
+
+### Exp 3b: Query parameters (req.query)
+GET {{baseUrl}}/demo/search?q=nodejs&limit=3
+
+### Exp 3c: URL Building with Web URL API
+GET {{baseUrl}}/demo/url-building
+
+### Exp 1b: HTTP POST to in-memory resource
+POST {{baseUrl}}/demo/items
+Content-Type: {{contentType}}
+
+{
+  "title": "Express Middleware Masterclass",
+  "category": "Backend"
+}
+
+### Exp 1b: HTTP GET in-memory resource
+GET {{baseUrl}}/demo/items
+
+### Exp 1b: HTTP DELETE in-memory resource
+DELETE {{baseUrl}}/demo/items/1
+
+### Exp 6: Route-level middleware (checkApiKey) - Unauthorized
+GET {{baseUrl}}/demo/protected-by-key
+
+### Exp 6: Route-level middleware (checkApiKey) - Authorized
+GET {{baseUrl}}/demo/protected-by-key?key=demo-secret-key
+
+### Exp 11: Set Cookie
+GET {{baseUrl}}/demo/set-cookie
+
+### Exp 11: Read Cookie
+GET {{baseUrl}}/demo/read-cookie
+
+### Exp 11: Clear Cookie
+GET {{baseUrl}}/demo/clear-cookie
+
+### Exp 11: Session View Counter
+GET {{baseUrl}}/demo/visits
+
+### Error-Handling Middleware demonstration (returns 418 TeaPot)
+GET {{baseUrl}}/demo/trigger-error

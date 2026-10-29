@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    body { background: #0b0f19; color: #f8fafc; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+    .card { background: #161e2e; border: 1px solid #273549; border-radius: 12px; width: 100%; max-width: 420px; padding: 32px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+    h2 { font-size: 1.5rem; margin-bottom: 8px; color: #60a5fa; text-align: center; }
+    p.desc { color: #94a3b8; font-size: 0.9rem; text-align: center; margin-bottom: 24px; }
+    .form-group { margin-bottom: 18px; }
+    label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: #cbd5e1; }
+    input { width: 100%; padding: 10px 14px; background: #0d131f; border: 1px solid #334155; border-radius: 6px; color: #fff; font-size: 0.95rem; }
+    input:focus { outline: none; border-color: #3b82f6; }
+    .btn { width: 100%; background: #2563eb; color: #fff; padding: 11px; border: none; border-radius: 6px; font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: background 0.2s; margin-top: 8px; }
+    .btn:hover { background: #1d4ed8; }
+    .error-box { background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #fca5a5; padding: 10px 14px; border-radius: 6px; font-size: 0.85rem; margin-bottom: 18px; }
+    .note { margin-top: 20px; font-size: 0.8rem; color: #64748b; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>InternShield Admin Portal</h2>
+    <p class="desc">Authenticate with administrative credentials</p>
+
+    <% if (error) { %>
+      <div class="error-box"><%= error %></div>
+    <% } %>
+
+    <form action="/admin/login" method="POST">
+      <div class="form-group">
+        <label for="email">Admin Email</label>
+        <input type="email" id="email" name="email" value="admin@internshield.com" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="••••••••" required>
+      </div>
+
+      <button type="submit" class="btn">Sign In to Dashboard</button>
+    </form>
+
+    <p class="note">Default Seed Credentials:<br><strong>admin@internshield.com</strong> / <strong>Admin@123</strong></p>
+  </div>
+</body>
+</html>

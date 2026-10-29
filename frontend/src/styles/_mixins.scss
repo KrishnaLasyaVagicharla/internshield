@@ -1,0 +1,54 @@
+// Sass Mixins (Syllabus Exp 4: SCSS Mixins, Responsive Breakpoints & Flex/Grid helpers)
+@use 'variables' as *;
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin card-surface {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  box-shadow: $shadow-md;
+  transition: $transition-smooth;
+}
+
+@mixin badge-variant($bg, $color, $border) {
+  background: $bg;
+  color: $color;
+  border: 1px solid $border;
+  border-radius: $radius-full;
+  padding: 3px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+// Media Query Breakpoints
+@mixin mobile {
+  @media (max-width: 640px) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (max-width: 1024px) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: 1025px) {
+    @content;
+  }
+}

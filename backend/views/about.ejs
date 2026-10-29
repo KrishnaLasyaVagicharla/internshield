@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --border: #334155;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background: var(--bg); color: var(--text); line-height: 1.6; padding: 40px 20px; }
+    .container { max-width: 800px; margin: 0 auto; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    h1 { color: #60a5fa; font-size: 2.2rem; margin-bottom: 8px; }
+    .subtitle { color: var(--muted); margin-bottom: 24px; font-size: 1.1rem; }
+    .badge { display: inline-block; background: #1d4ed8; color: #fff; padding: 4px 12px; border-radius: 999px; font-size: 0.85rem; font-weight: 600; margin-bottom: 20px; }
+    .features-list { list-style: none; margin: 24px 0; }
+    .feature-item { background: rgba(255,255,255,0.03); border-left: 4px solid var(--primary); padding: 14px 18px; margin-bottom: 12px; border-radius: 4px; }
+    .feature-title { font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .feature-desc { color: var(--muted); font-size: 0.95rem; }
+    .footer-note { margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 0.9rem; }
+    .btn { display: inline-block; background: var(--primary); color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 6px; font-weight: 600; margin-top: 10px; }
+    .btn:hover { background: #1d4ed8; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <span class="badge">Syllabus Demonstration: Exp 2 (EJS Server-Side Rendering)</span>
+    <h1><%= title %></h1>
+    <p class="subtitle">Empowering college students with transparent, fraud-free internship discovery.</p>
+
+    <p>InternShield was developed for the <strong><%= courseName %></strong> curriculum. It leverages machine learning patterns, text heuristic rules, and real-time MongoDB indexes to detect scam listings, calculate resume ATS compatibility, and bridge student skill gaps.</p>
+
+    <h3 style="margin-top: 28px; color: #93c5fd;">Key Project Capabilities:</h3>
+    <ul class="features-list">
+      <% features.forEach(function(feature, index) { %>
+        <li class="feature-item">
+          <div class="feature-title"><%= (index + 1) %>. <%= feature.name %></div>
+          <div class="feature-desc"><%= feature.desc %></div>
+        </li>
+      <% }); %>
+    </ul>
+
+    <div class="footer-note">
+      <span>Academic Year <%= year %> | Full Stack Development Course Project</span>
+      <a href="/admin" class="btn">Admin Panel &rarr;</a>
+    </div>
+  </div>
+</body>
+</html>

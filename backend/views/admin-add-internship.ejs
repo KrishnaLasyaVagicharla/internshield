@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --sidebar: #1e293b;
+      --card: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --primary: #3b82f6;
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    body { background: var(--bg); color: var(--text); display: flex; min-height: 100vh; }
+    .sidebar { width: 260px; background: var(--sidebar); border-right: 1px solid var(--border); padding: 24px 20px; display: flex; flex-direction: column; }
+    .brand { font-size: 1.25rem; font-weight: 800; color: #60a5fa; margin-bottom: 30px; }
+    .nav-links { list-style: none; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .nav-links a { color: var(--muted); text-decoration: none; padding: 10px 14px; border-radius: 6px; display: block; font-weight: 500; font-size: 0.95rem; }
+    .nav-links a.active { background: rgba(59, 130, 246, 0.15); color: #fff; }
+    .user-footer { border-top: 1px solid var(--border); padding-top: 16px; font-size: 0.85rem; color: var(--muted); display: flex; justify-content: space-between; }
+    
+    .main { flex: 1; padding: 32px 40px; overflow-y: auto; }
+    .header { margin-bottom: 24px; }
+    .header h1 { font-size: 1.8rem; font-weight: 700; }
+    .form-container { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 32px; max-width: 780px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .form-group { margin-bottom: 18px; }
+    label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: #cbd5e1; }
+    input, select, textarea { width: 100%; padding: 10px 12px; background: #0b1120; border: 1px solid var(--border); border-radius: 6px; color: #fff; font-size: 0.95rem; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); }
+    .checkbox-group { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+    .checkbox-group input { width: auto; }
+    .btn-submit { background: var(--primary); color: #fff; border: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; font-size: 1rem; cursor: pointer; width: 100%; margin-top: 10px; }
+    .btn-submit:hover { opacity: 0.9; }
+    .error-box { background: rgba(239, 68, 68, 0.15); border: 1px solid var(--danger); color: #fca5a5; padding: 12px; border-radius: 6px; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">InternShield</div>
+    <ul class="nav-links">
+      <li><a href="/admin">Overview Dashboard</a></li>
+      <li><a href="/admin/reports">Moderation Reports</a></li>
+      <li><a href="/admin/internships/new" class="active">+ Post Internship</a></li>
+      <li><a href="/about" target="_blank">Public About (SSR)</a></li>
+      <li><a href="http://localhost:5173" target="_blank">React Student Portal &rarr;</a></li>
+    </ul>
+    <div class="user-footer">
+      <span><%= user ? user.name : 'Admin' %></span>
+      <a href="/admin/logout" style="color: var(--danger); text-decoration: none;">Logout</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="header">
+      <h1>Post New Internship Listing</h1>
+      <p style="color: var(--muted); font-size: 0.95rem; margin-top: 4px;">Demonstrating HTML Form Data (application/x-www-form-urlencoded) via Express urlencoded (Exp 2)</p>
+    </div>
+
+    <% if (error) { %>
+      <div class="error-box"><%= error %></div>
+    <% } %>
+
+    <div class="form-container">
+      <form action="/admin/internships" method="POST">
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="title">Internship Title *</label>
+            <input type="text" id="title" name="title" placeholder="e.g. Frontend Engineer Intern" required>
+          </div>
+          <div class="form-group">
+            <label for="company">Company Name *</label>
+            <input type="text" id="company" name="company" placeholder="e.g. Microsoft" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Job Description & Responsibilities *</label>
+          <textarea id="description" name="description" rows="4" placeholder="Detail the duties, mentor support, and learning scope..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="requiredSkills">Required Skills (comma-separated) *</label>
+          <input type="text" id="requiredSkills" name="requiredSkills" placeholder="React, JavaScript, HTML, CSS, Git" required>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="location">Location</label>
+            <input type="text" id="location" name="location" value="Bengaluru, India" required>
+          </div>
+          <div class="form-group">
+            <label for="stipend">Monthly Stipend (INR ₹)</label>
+            <input type="number" id="stipend" name="stipend" value="25000" min="0">
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="mode">Working Mode</label>
+            <select id="mode" name="mode">
+              <option value="remote">Remote</option>
+              <option value="hybrid">Hybrid</option>
+              <option value="onsite">On-site</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="trustScore">Trust Score (0-100)</label>
+            <input type="number" id="trustScore" name="trustScore" value="98" min="0" max="100">
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="recruiterEmail">Official Recruiter Email</label>
+            <input type="email" id="recruiterEmail" name="recruiterEmail" placeholder="careers@microsoft.com">
+          </div>
+          <div class="form-group">
+            <label for="recruiterPhone">Recruiter Phone</label>
+            <input type="tel" id="recruiterPhone" name="recruiterPhone" placeholder="08012345678">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="applyLink">Official Application URL</label>
+          <input type="url" id="applyLink" name="applyLink" placeholder="https://careers.microsoft.com">
+        </div>
+
+        <div class="form-group checkbox-group">
+          <input type="checkbox" id="verified" name="verified" checked>
+          <label for="verified" style="margin-bottom: 0; cursor: pointer;">
+            Mark as <strong>Verified Real</strong> (Automatically triggers alert generation for matched students)
+          </label>
+        </div>
+
+        <button type="submit" class="btn-submit">Publish Internship Listing</button>
+      </form>
+    </div>
+  </main>
+</body>
+</html>
