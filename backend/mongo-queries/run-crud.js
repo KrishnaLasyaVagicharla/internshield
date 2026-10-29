@@ -7,7 +7,7 @@ const dns = require('dns');
 try { dns.setServers(['8.8.8.8', '1.1.1.1']); } catch (e) {}
 const mongoose = require('mongoose');
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/internshield';
+const MONGO_URI = process.env.MONGO_URI;
 
 async function runCrud() {
   console.log('=== STARTING EXP 9: MONGODB BASIC CRUD OPERATIONS ===\n');

@@ -15,11 +15,16 @@ const Report = require('../models/Report');
 const Alert = require('../models/Alert');
 const Course = require('../models/Course');
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/internshield';
+const MONGO_URI = process.env.MONGO_URI;
 
 const seedDatabase = async () => {
+  if (!MONGO_URI) {
+    console.error('[Seed] MONGO_URI environment variable is not set.');
+    process.exit(1);
+  }
+
   try {
-    console.log('[Seed] Connecting to MongoDB at:', MONGO_URI);
+    console.log('[Seed] Connecting to MongoDB...');
     await mongoose.connect(MONGO_URI);
     console.log('[Seed] Connected successfully. Clearing existing collections...');
 

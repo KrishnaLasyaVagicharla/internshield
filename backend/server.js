@@ -33,7 +33,10 @@ const { getAboutPage } = require('./controllers/adminController');
 const app = express();
 const PORT = process.env.PORT || 5000;
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/internshield';
+const isProduction = process.env.NODE_ENV === 'production';
+
+// Trust first proxy (Render, Railway, etc.) so secure cookies & rate-limiting work
+app.set('trust proxy', 1);
 
 // Connect to Database
 connectDB();
@@ -79,8 +82,8 @@ app.use(
     }),
     cookie: {
       httpOnly: true, // Mitigates XSS cookie theft
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
       maxAge: 24 * 60 * 60 * 1000 // 1 day
     }
   })
@@ -102,6 +105,11 @@ app.use('/api/demo', demoRoutes);
 
 // 6. Mount EJS Admin Panel (Exp 2)
 app.use('/admin', adminRoutes);
+
+// Health check endpoint for uptime monitoring
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok', uptime: process.uptime() });
+});
 
 // Root health check endpoint
 app.get('/', (req, res) => {
